@@ -10,11 +10,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.corrutinas.ui.theme.CorrutinasTheme
@@ -25,12 +28,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             CorrutinasTheme {
+                var studentViewModel = StudentViewModel()
+
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    //RuletaView()
+                    RuletaView(studentViewModel)
                 }
             }
         }
@@ -57,20 +62,32 @@ fun GreetingPreview() {
 
 @Composable
 fun RuletaView(studentViewModel: StudentViewModel) {
+    var printedText = studentViewModel.selectedStudent
+
     Column (
-        modifier = Modifier.fillMaxSize().padding(10.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp)
     ) {
-        Text(text = studentViewModel.selectedStudent)
+        Text(text = printedText)
         Spacer(modifier = Modifier.height(10.dp))
-        Button(
-            onClick = {
-              studentViewModel.getData()
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)
-        ) {
-            Text(text = "Tendre suerte")
+
+        if (!printedText.contains("Buscando")) {
+            Button(
+                onClick = {
+                    studentViewModel.getData()
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
+            ) {
+                Text(text = "Tendre suerte")
+            }
+        } else {
+            CircularProgressIndicator(
+                color = Color(0xFF009688),
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
         }
     }
 }
